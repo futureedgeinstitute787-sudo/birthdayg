@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;1,500&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1B1330;
+    --panel:#2A1F47;
+    --gold:#E8B86D;
+    --rose:#F2789F;
+    --cream:#FBF7F0;
+    --muted:#B9AFD1;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{
+    height:100%;
+    background:var(--ink);
+    font-family:'Nunito', sans-serif;
+    color:var(--cream);
+    overflow:hidden;
+  }
+  body{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  /* ---------- background stars ---------- */
+  .stars{
+    position:fixed; inset:0;
+    background-image:
+      radial-gradient(2px 2px at 20% 30%, var(--gold), transparent),
+      radial-gradient(1.5px 1.5px at 70% 20%, var(--cream), transparent),
+      radial-gradient(2px 2px at 40% 80%, var(--rose), transparent),
+      radial-gradient(1.5px 1.5px at 85% 65%, var(--gold), transparent),
+      radial-gradient(1.5px 1.5px at 10% 70%, var(--cream), transparent),
+      radial-gradient(2px 2px at 60% 45%, var(--gold), transparent);
+    background-size: 100% 100%;
+    opacity:0.6;
+    pointer-events:none;
+  }
+
+  /* ---------- LOCK SCREEN ---------- */
+  #lock-screen{
+    position:relative;
+    z-index:2;
+    width:min(90vw, 420px);
+    text-align:center;
+    padding:48px 32px;
+    background:var(--panel);
+    border-radius:18px;
+    box-shadow:0 30px 60px rgba(0,0,0,0.45);
+    border:1px solid rgba(232,184,109,0.25);
+  }
+  .lock-icon{
+    width:52px; height:52px;
+    margin:0 auto 20px;
+    display:block;
+  }
+  #lock-screen h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.6rem;
+    letter-spacing:0.3px;
+    margin-bottom:8px;
+    color:var(--cream);
+  }
+  #lock-screen p{
+    color:var(--muted);
+    font-size:0.95rem;
+    margin-bottom:28px;
+    line-height:1.5;
+  }
+  .pw-row{
+    display:flex;
+    gap:10px;
+  }
+  #pw-input{
+    flex:1;
+    padding:13px 16px;
+    border-radius:10px;
+    border:1.5px solid rgba(232,184,109,0.3);
+    background:rgba(0,0,0,0.2);
+    color:var(--cream);
+    font-size:1rem;
+    outline:none;
+    transition:border-color 0.2s;
+    font-family:'Nunito', sans-serif;
+  }
+  #pw-input:focus{ border-color:var(--gold); }
+  #pw-submit{
+    padding:13px 20px;
+    border-radius:10px;
+    border:none;
+    background:var(--gold);
+    color:var(--ink);
+    font-weight:700;
+    cursor:pointer;
+    font-size:1rem;
+    transition:transform 0.15s, background 0.2s;
+  }
+  #pw-submit:hover{ background:#f0c684; transform:translateY(-1px); }
+  #pw-error{
+    margin-top:14px;
+    color:var(--rose);
+    font-size:0.85rem;
+    min-height:18px;
+  }
+  .shake{ animation:shake 0.4s; }
+  @keyframes shake{
+    0%,100%{ transform:translateX(0); }
+    20%{ transform:translateX(-8px); }
+    40%{ transform:translateX(8px); }
+    60%{ transform:translateX(-6px); }
+    80%{ transform:translateX(6px); }
+  }
+
+  /* ---------- CARD SCREEN ---------- */
+  #card-screen{
+    display:none;
+    position:relative;
+    z-index:2;
+    width:min(92vw, 560px);
+    max-height:92vh;
+    overflow-y:auto;
+    padding:44px 36px 52px;
+    background:var(--panel);
+    border-radius:22px;
+    box-shadow:0 30px 70px rgba(0,0,0,0.5);
+    border:1px solid rgba(232,184,109,0.25);
+    text-align:center;
+  }
+  #card-screen::-webkit-scrollbar{ width:6px; }
+  #card-screen::-webkit-scrollbar-thumb{ background:rgba(232,184,109,0.3); border-radius:6px; }
+
+  .balloons{
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    margin-bottom:6px;
+  }
+  .balloon{
+    width:34px; height:42px;
+    border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+    position:relative;
+    animation:float 3.2s ease-in-out infinite;
+  }
+  .balloon::after{
+    content:'';
+    position:absolute;
+    bottom:-14px; left:50%;
+    width:1.5px; height:16px;
+    background:rgba(255,255,255,0.35);
+    transform:translateX(-50%);
+  }
+  .balloon:nth-child(1){ background:var(--rose); animation-delay:0s; }
+  .balloon:nth-child(2){ background:var(--gold); animation-delay:0.4s; }
+  .balloon:nth-child(3){ background:#8FD3C7; animation-delay:0.8s; }
+  .balloon:nth-child(4){ background:var(--rose); animation-delay:1.2s; }
+  @keyframes float{
+    0%,100%{ transform:translateY(0) rotate(-2deg); }
+    50%{ transform:translateY(-10px) rotate(2deg); }
+  }
+
+  .eyebrow{
+    font-size:0.78rem;
+    color:var(--gold);
+    letter-spacing:1px;
+    margin:18px 0 6px;
+  }
+  #card-screen h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-style:italic;
+    font-size:2.4rem;
+    line-height:1.15;
+    color:var(--cream);
+    margin-bottom:6px;
+  }
+  #card-screen h1 span{ color:var(--gold); font-style:normal; }
+  .recipient{
+    font-family:'Fraunces', serif;
+    font-size:1.5rem;
+    color:var(--rose);
+    margin-bottom:22px;
+  }
+  .divider{
+    width:60px; height:2px;
+    background:linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin:0 auto 24px;
+  }
+  .wish{
+    font-size:1.02rem;
+    line-height:1.75;
+    color:var(--muted);
+    max-width:420px;
+    margin:0 auto 16px;
+  }
+  .wish strong{ color:var(--cream); }
+
+  .cake{
+    font-size:2.6rem;
+    margin:26px 0 10px;
+    cursor:pointer;
+    user-select:none;
+    transition:transform 0.2s;
+  }
+  .cake:hover{ transform:scale(1.08); }
+  .cake-hint{
+    font-size:0.8rem;
+    color:var(--muted);
+    margin-bottom:20px;
+  }
+
+  .gallery{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:10px;
+  }
+  .gallery-item{
+    aspect-ratio:1/1;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:2rem;
+    background:rgba(232,184,109,0.08);
+    border:1px solid rgba(232,184,109,0.2);
+  }
+
+  .signature{
+    margin-top:30px;
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    color:var(--gold);
+    font-size:1.05rem;
+  }
+
+  /* confetti */
+  .confetti-piece{
+    position:fixed;
+    top:-10px;
+    width:8px; height:14px;
+    opacity:0.9;
+    z-index:5;
+    pointer-events:none;
+    animation:fall linear forwards;
+  }
+  @keyframes fall{
+    to{ transform:translateY(110vh) rotate(540deg); opacity:0.3; }
+  }
+
+  @media (max-width:480px){
+    #card-screen h1{ font-size:1.9rem; }
+    .recipient{ font-size:1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stars"></div>
+
+<!-- LOCK SCREEN -->
+<div id="lock-screen">
+  <svg class="lock-icon" viewBox="0 0 48 48" fill="none">
+    <rect x="10" y="21" width="28" height="20" rx="4" stroke="#E8B86D" stroke-width="2"/>
+    <path d="M16 21V15C16 10.5817 19.5817 7 24 7C28.4183 7 32 10.5817 32 15V21" stroke="#E8B86D" stroke-width="2"/>
+    <circle cx="24" cy="30" r="2.5" fill="#E8B86D"/>
+    <path d="M24 32.5V36" stroke="#E8B86D" stroke-width="2" stroke-linecap="round"/>
+  </svg>
+  <h1>Ye card locked hai</h1>
+  <p>Sirf khaas insaan ke liye — password daal kar dekho kya andar hai.</p>
+  <div class="pw-row">
+    <input type="password" id="pw-input" placeholder="Password" autocomplete="off">
+    <button id="pw-submit" onclick="checkPassword()">Open</button>
+  </div>
+  <div id="pw-error"></div>
+</div>
+
+<!-- CARD SCREEN -->
+<div id="card-screen">
+  <div class="balloons">
+    <div class="balloon"></div>
+    <div class="balloon"></div>
+    <div class="balloon"></div>
+    <div class="balloon"></div>
+  </div>
+
+  <div class="eyebrow">a little something for you</div>
+  <h1>Happy <span>Birthday</span></h1>
+  <div class="recipient">Muhammad Hadi</div>
+  <div class="divider"></div>
+
+  <p class="wish">Aapki zindagi mein <strong>khushiyan</strong>, <strong>kamyabi</strong> aur <strong>sukoon</strong> hamesha bane rahein. Ye din aapke liye naye jazbon, naye khwabon aur naye rangon ke saath aaya hai.</p>
+  <p class="wish">Jo bhi socha hai, jo bhi chaha hai — sab kuch is saal poora ho. <strong>Happy Birthday!</strong> 🎉</p>
+
+  <div class="cake" id="cake" onclick="blowCandle()">🎂✨</div>
+  <div class="cake-hint" id="cakeHint">candle par click karo</div>
+
+  <div class="gallery">
+    <div class="gallery-item">🎈</div>
+    <div class="gallery-item">🎁</div>
+    <div class="gallery-item">🥳</div>
+    <div class="gallery-item">🌟</div>
+  </div>
+
+  <div class="signature">— with love & duas</div>
+</div>
+
+<script>
+  const CORRECT_PASSWORD = "12345"; // <-- yahan apna password likh do
+
+  function checkPassword(){
+    const input = document.getElementById('pw-input');
+    const errorBox = document.getElementById('pw-error');
+    const lockScreen = document.getElementById('lock-screen');
+    const cardScreen = document.getElementById('card-screen');
+
+    if(input.value === CORRECT_PASSWORD){
+      lockScreen.style.display = 'none';
+      cardScreen.style.display = 'block';
+      launchConfetti();
+    } else {
+      errorBox.textContent = "Galat password, dobara koshish karo.";
+      lockScreen.classList.remove('shake');
+      void lockScreen.offsetWidth;
+      lockScreen.classList.add('shake');
+    }
+  }
+
+  document.getElementById('pw-input').addEventListener('keydown', function(e){
+    if(e.key === 'Enter') checkPassword();
+  });
+
+  function launchConfetti(){
+    const colors = ['#E8B86D','#F2789F','#8FD3C7','#FBF7F0'];
+    for(let i=0; i<60; i++){
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.style.left = Math.random()*100 + 'vw';
+      piece.style.background = colors[Math.floor(Math.random()*colors.length)];
+      piece.style.animationDuration = (2.5 + Math.random()*2) + 's';
+      piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      document.body.appendChild(piece);
+      setTimeout(() => piece.remove(), 4800);
+    }
+  }
+
+  function blowCandle(){
+    document.getElementById('cake').textContent = '🎂';
+    document.getElementById('cakeHint').textContent = 'Wish poori ho! 🤍';
+    launchConfetti();
+  }
+</script>
+
+</body>
+</html>
